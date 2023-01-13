@@ -20,8 +20,7 @@ public class CharaMovement : MonoBehaviour
     private double xscale = 0.2;
     private double yscale = 0.2;
 
-    
-
+    public CooldownBar myCooldownBar;
 
     [SerializeField] private float speed;
     [SerializeField] private float jumppower;
@@ -36,6 +35,7 @@ public class CharaMovement : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         Reverse();
         nextReverseTime = Time.time + reverseCooldownTime;
+        myCooldownBar.SetMaxCooldown(reverseCooldownTime);
 
         this.platform = null;
     }
@@ -43,6 +43,8 @@ public class CharaMovement : MonoBehaviour
     private void Update()
     {
 
+        if(nextReverseTime - Time.time >= 0)
+        myCooldownBar.SetCooldown(nextReverseTime - Time.time);
 
         //movement
         float horizontalInput = Input.GetAxis("Horizontal");
@@ -125,6 +127,7 @@ public class CharaMovement : MonoBehaviour
 
             reversed = true;
         }
+
     }
     private void Jump()
     {
