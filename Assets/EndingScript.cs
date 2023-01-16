@@ -4,13 +4,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Globalization;
 using System;
-using UnityEditor.Build.Content;
+// using UnityEditor.Build.Content;
 
 public class EndingScript : MonoBehaviour
 {
-
-    public UnityEvent victoryEvent;
-    public UnityEvent nonVictoryEvent;
 
     public ManageGame myManageGame;
     public SpriteRenderer spriteRenderer;
@@ -34,12 +31,12 @@ public class EndingScript : MonoBehaviour
             if (myManageGame.collectedItemAmount == 6)
             {
                 spriteRenderer.sprite = activeSprite;
-                victoryEvent.Invoke();
+                FindObjectOfType<ManageGame>().WinGame();
             }
             else
-{
-    nonVictoryEvent.Invoke();
-}
+            {
+                FindObjectOfType<ManageGame>().NowinGame();
+            }
         }
             }
 
