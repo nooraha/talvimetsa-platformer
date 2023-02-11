@@ -20,8 +20,9 @@ public class CharaMovement : MonoBehaviour
     private double xscale = 0.2;
     private double yscale = 0.2;
 
-    
+    public bool canMove = true;
 
+    public CooldownBar myCooldownBar;
 
     [SerializeField] private float speed;
     [SerializeField] private float jumppower;
@@ -36,6 +37,7 @@ public class CharaMovement : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         Reverse();
         nextReverseTime = Time.time + reverseCooldownTime;
+        myCooldownBar.SetMaxCooldown(reverseCooldownTime);
 
         this.platform = null;
     }
@@ -43,14 +45,19 @@ public class CharaMovement : MonoBehaviour
     private void Update()
     {
 
+        if(nextReverseTime - Time.time >= 0)
+        myCooldownBar.SetCooldown(nextReverseTime - Time.time);
+
+        float horizontalInput = Input.GetAxis("Horizontal");
 
         //movement
-        float horizontalInput = Input.GetAxis("Horizontal");
+        if (canMove)
+        { 
         body.velocity = new Vector2(horizontalInput * speed, body.velocity.y);
-
+        }
 
         //flip player when moving
-        if(horizontalInput > 0.01f)
+        if (horizontalInput > 0.01f)
         {
             xscale = 0.2;
         }
@@ -75,7 +82,7 @@ public class CharaMovement : MonoBehaviour
         transform.localScale = new Vector3((float)xscale, (float)yscale, transform.localScale.z);
 
         //reverse mechanic
-        if (Input.GetKey(KeyCode.B) && grounded && Time.time > nextReverseTime)
+        if (Input.GetKey(KeyCode.B) && grounded && canMove && Time.time > nextReverseTime)
         {
             Reverse();
             nextReverseTime = Time.time + reverseCooldownTime;
@@ -83,7 +90,7 @@ public class CharaMovement : MonoBehaviour
         }
 
         //jump
-        if(Input.GetKey(KeyCode.Space) && grounded)
+        if(Input.GetKey(KeyCode.Space) && grounded && canMove)
         {
             Jump();
             animator.SetBool("IsJumping", true);
@@ -125,6 +132,7 @@ public class CharaMovement : MonoBehaviour
 
             reversed = true;
         }
+
     }
     private void Jump()
     {

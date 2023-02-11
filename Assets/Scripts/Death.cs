@@ -11,8 +11,8 @@ public class Death : MonoBehaviour
     [SerializeField] private bool dead = false;
     [SerializeField] private Transform respawnPoint;
     [SerializeField] private int lives;
-    public UnityEvent deathEvent;
-    public UnityEvent gameOverEvent;
+
+    public CharaMovement charaMovement;
 
     public Text livesText;
 
@@ -42,13 +42,13 @@ public class Death : MonoBehaviour
         {
             dead = false;
             lives -= 1;
-            deathEvent.Invoke();
             Respawn();
         }
 
         if (lives == 0)
         {
-            gameOverEvent.Invoke();
+            charaMovement.canMove = false;
+            FindObjectOfType<ManageGame>().EndGame();
         }
 
         livesText.text = Convert.ToString(lives);
